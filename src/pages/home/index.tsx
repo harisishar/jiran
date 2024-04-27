@@ -7,10 +7,10 @@ import CardContent from '@mui/material/CardContent'
 
 const Home = () => {
   return (
-    <Grid container spacing={6}>
+    <Grid container spacing={6} flexDirection={'row'}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='Kick start your project 🚀'></CardHeader>
+          <CardHeader title='Bills 🚀'></CardHeader>
           <CardContent>
             <Typography sx={{ mb: 2 }}>All the best for your new project.</Typography>
             <Typography>
@@ -22,10 +22,47 @@ const Home = () => {
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='ACL and JWT 🔒'></CardHeader>
+          <CardHeader title='Visitors 🔒'></CardHeader>
           <CardContent>
             <Typography sx={{ mb: 2 }}>
-              Access Control (ACL) and Authentication (JWT) are the two main security features of our template and are implemented in the starter-kit as well.
+              Access Control (ACL) and Authentication (JWT) are the two main security features of our template and are
+              implemented in the starter-kit as well.
+            </Typography>
+            <Typography>Please read our Authentication and ACL Documentations to get more out of them.</Typography>
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid item xs={12}>
+        <Card>
+          <CardHeader title='Complaints 🔒'></CardHeader>
+          <CardContent>
+            <Typography sx={{ mb: 2 }}>
+              Access Control (ACL) and Authentication (JWT) are the two main security features of our template and are
+              implemented in the starter-kit as well.
+            </Typography>
+            <Typography>Please read our Authentication and ACL Documentations to get more out of them.</Typography>
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid item xs={12}>
+        <Card>
+          <CardHeader title='Annoucements 🔒'></CardHeader>
+          <CardContent>
+            <Typography sx={{ mb: 2 }}>
+              Access Control (ACL) and Authentication (JWT) are the two main security features of our template and are
+              implemented in the starter-kit as well.
+            </Typography>
+            <Typography>Please read our Authentication and ACL Documentations to get more out of them.</Typography>
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid item xs={12}>
+        <Card>
+          <CardHeader title='Residents 🔒'></CardHeader>
+          <CardContent>
+            <Typography sx={{ mb: 2 }}>
+              Access Control (ACL) and Authentication (JWT) are the two main security features of our template and are
+              implemented in the starter-kit as well.
             </Typography>
             <Typography>Please read our Authentication and ACL Documentations to get more out of them.</Typography>
           </CardContent>
