@@ -14,8 +14,8 @@ const navigation = (): VerticalNavItemsType => {
       icon: 'mdi:email-outline'
     },
     {
-      title: 'Visitor',
-      path: '/visitor',
+      title: 'Visitors',
+      path: '/visitors',
       icon: 'pepicons-pencil:people'
     },
     {
