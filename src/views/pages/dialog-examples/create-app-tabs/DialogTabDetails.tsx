@@ -25,7 +25,7 @@ const TabDetails = () => {
 
   return (
     <div>
-      <TextField fullWidth sx={{ mb: 4 }} label='Application Name' placeholder={`${themeConfig.templateName} Admin`} />
+      <TextField fullWidth sx={{ mb: 4 }} label='Application Name' placeholder='Jiran Admin' />
       <Typography variant='h6' sx={{ mb: 4 }}>
         Category
       </Typography>

@@ -84,10 +84,7 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
         <Tab value='overview' label='Overview' icon={<Icon icon='mdi:account-outline' />} />
-        <Tab value='security' label='Security' icon={<Icon icon='mdi:lock-outline' />} />
-        <Tab value='billing-plan' label='Billing & Plan' icon={<Icon icon='mdi:bookmark-outline' />} />
-        <Tab value='notification' label='Notification' icon={<Icon icon='mdi:bell-outline' />} />
-        <Tab value='connection' label='Connection' icon={<Icon icon='mdi:link-variant' />} />
+        <Tab value='billing-plan' label='Billing' icon={<Icon icon='mdi:bookmark-outline' />} />
       </TabList>
       <Box sx={{ mt: 6 }}>
         {isLoading ? (
@@ -100,17 +97,8 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
             <TabPanel sx={{ p: 0 }} value='overview'>
               <UserViewOverview invoiceData={invoiceData} />
             </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='security'>
-              <UserViewSecurity />
-            </TabPanel>
             <TabPanel sx={{ p: 0 }} value='billing-plan'>
               <UserViewBilling />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='notification'>
-              <UserViewNotification />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='connection'>
-              <UserViewConnection />
             </TabPanel>
           </>
         )}

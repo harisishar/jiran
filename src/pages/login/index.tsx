@@ -249,7 +249,7 @@ const LoginPage = () => {
                 </defs>
               </svg>
               <Typography variant='h6' sx={{ ml: 2, lineHeight: 1, fontWeight: 700, fontSize: '1.5rem !important' }}>
-                {themeConfig.templateName}
+                Jiran
               </Typography>
             </Box>
             <Box sx={{ mb: 6 }}>
@@ -337,12 +337,7 @@ const LoginPage = () => {
               <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
                 Login
               </Button>
-              <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
-                <Typography sx={{ mr: 2, color: 'text.secondary' }}>New on our platform?</Typography>
-                <Typography href='/register' component={Link} sx={{ color: 'primary.main', textDecoration: 'none' }}>
-                  Create an account
-                </Typography>
-              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}></Box>
               <Divider
                 sx={{
                   '& .MuiDivider-wrapper': { px: 4 },

@@ -197,7 +197,7 @@ const ForgotPassword = () => {
                 </defs>
               </svg>
               <Typography variant='h6' sx={{ ml: 2, lineHeight: 1, fontWeight: 700, fontSize: '1.5rem !important' }}>
-                {themeConfig.templateName}
+                Jiran
               </Typography>
             </Box>
             <Box sx={{ mb: 6 }}>

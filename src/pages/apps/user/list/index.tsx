@@ -222,19 +222,7 @@ const columns: GridColDef[] = [
       )
     }
   },
-  {
-    flex: 0.15,
-    minWidth: 120,
-    headerName: 'Plan',
-    field: 'currentPlan',
-    renderCell: ({ row }: CellType) => {
-      return (
-        <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-          {row.currentPlan}
-        </Typography>
-      )
-    }
-  },
+
   {
     flex: 0.1,
     minWidth: 110,
@@ -306,19 +294,6 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
 
   return (
     <Grid container spacing={6}>
-      <Grid item xs={12}>
-        {apiData && (
-          <Grid container spacing={6}>
-            {apiData.statsHorizontal.map((item: CardStatsHorizontalProps, index: number) => {
-              return (
-                <Grid item xs={12} md={3} sm={6} key={index}>
-                  <CardStatisticsHorizontal {...item} icon={<Icon icon={item.icon as string} />} />
-                </Grid>
-              )
-            })}
-          </Grid>
-        )}
-      </Grid>
       <Grid item xs={12}>
         <Card>
           <CardHeader title='Search Filters' sx={{ pb: 4, '& .MuiCardHeader-title': { letterSpacing: '.15px' } }} />

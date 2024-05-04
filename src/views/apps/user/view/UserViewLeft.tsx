@@ -52,11 +52,10 @@ const data: UsersType = {
   status: 'active',
   username: 'gslixby0',
   avatarColor: 'primary',
-  country: 'El Salvador',
+  country: 'Malaysia',
   company: 'Yotz PVT LTD',
-  contact: '(479) 232-9151',
-  currentPlan: 'enterprise',
-  fullName: 'Daisy Patterson',
+  contact: '42234355',
+  fullName: 'Farah Hanum',
   email: 'gslixby0@abc.net.au',
   avatar: '/images/avatars/4.png'
 }
@@ -78,7 +77,7 @@ const statusColors: ColorsType = {
 // ** Styled <sup> component
 const Sup = styled('sup')(({ theme }) => ({
   top: '0.2rem',
-  left: '-0.6rem',
+  left: '-1.5rem',
   position: 'absolute',
   color: theme.palette.primary.main
 }))
@@ -155,9 +154,9 @@ const UserViewLeft = () => {
                   </CustomAvatar>
                   <div>
                     <Typography variant='h6' sx={{ lineHeight: 1.3 }}>
-                      1.23k
+                      RM1.23k
                     </Typography>
-                    <Typography variant='body2'>Task Done</Typography>
+                    <Typography variant='body2'>Paid Bill</Typography>
                   </div>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -166,9 +165,9 @@ const UserViewLeft = () => {
                   </CustomAvatar>
                   <div>
                     <Typography variant='h6' sx={{ lineHeight: 1.3 }}>
-                      568
+                      12
                     </Typography>
-                    <Typography variant='body2'>Project Done</Typography>
+                    <Typography variant='body2'>Complain Made</Typography>
                   </div>
                 </Box>
               </Box>
@@ -316,7 +315,7 @@ const UserViewLeft = () => {
                           labelId='user-view-language-label'
                         >
                           <MenuItem value='English'>English</MenuItem>
-                          <MenuItem value='Spanish'>Spanish</MenuItem>
+                          <MenuItem value='Spanish'>Malay</MenuItem>
                           <MenuItem value='Portuguese'>Portuguese</MenuItem>
                           <MenuItem value='Russian'>Russian</MenuItem>
                           <MenuItem value='French'>French</MenuItem>
@@ -329,7 +328,7 @@ const UserViewLeft = () => {
                         <InputLabel id='user-view-country-label'>Country</InputLabel>
                         <Select
                           label='Country'
-                          defaultValue='USA'
+                          defaultValue='MALAYSIA'
                           id='user-view-country'
                           labelId='user-view-country-label'
                         >
@@ -386,7 +385,7 @@ const UserViewLeft = () => {
                 sx={{ fontSize: '0.75rem', borderRadius: '4px' }}
               />
               <Box sx={{ display: 'flex', position: 'relative' }}>
-                <Sup>$</Sup>
+                <Sup>RM</Sup>
                 <Typography
                   variant='h3'
                   sx={{
@@ -395,7 +394,7 @@ const UserViewLeft = () => {
                     color: 'primary.main'
                   }}
                 >
-                  99
+                  1K
                 </Typography>
                 <Sub>/ month</Sub>
               </Box>
@@ -408,35 +407,7 @@ const UserViewLeft = () => {
                 >
                   <Icon icon='mdi:circle' fontSize='0.625rem' />
                   <Typography component='span' sx={{ fontSize: '0.875rem' }}>
-                    10 Users
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    mt: 2.5,
-                    display: 'flex',
-                    mb: 2.5,
-                    alignItems: 'center',
-                    '& svg': { mr: 2, color: 'text.secondary' }
-                  }}
-                >
-                  <Icon icon='mdi:circle' fontSize='0.625rem' />
-                  <Typography component='span' sx={{ fontSize: '0.875rem' }}>
-                    Up to 10GB storage
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    mt: 2.5,
-                    display: 'flex',
-                    mb: 2.5,
-                    alignItems: 'center',
-                    '& svg': { mr: 2, color: 'text.secondary' }
-                  }}
-                >
-                  <Icon icon='mdi:circle' fontSize='0.625rem' />
-                  <Typography component='span' sx={{ fontSize: '0.875rem' }}>
-                    Basic Support
+                    Rental Payment
                   </Typography>
                 </Box>
               </Box>
@@ -452,9 +423,6 @@ const UserViewLeft = () => {
               <Typography variant='caption' sx={{ mt: 1.5, mb: 6 }}>
                 4 days remaining
               </Typography>
-              <Button variant='contained' sx={{ width: '100%' }} onClick={handlePlansClickOpen}>
-                Upgrade Plan
-              </Button>
             </CardContent>
 
             <Dialog

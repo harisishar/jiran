@@ -5,26 +5,14 @@ const navigation = (): VerticalNavItemsType => {
   return [
     {
       title: 'Home',
-      path: '/pages/home',
-      icon: 'mdi:home-outline'
-    },
-    {
-      title: 'Dashboards',
-      icon: 'mdi:home-outline',
+      path: '',
       badgeContent: 'new',
       badgeColor: 'error',
+      icon: 'mdi:home-outline',
       children: [
         {
-          title: 'CRM',
-          path: '/dashboards/crm'
-        },
-        {
-          title: 'Analytics',
-          path: '/dashboards/analytics'
-        },
-        {
-          title: 'eCommerce',
-          path: '/dashboards/ecommerce'
+          title: 'Dashboard',
+          path: '/pages/home'
         }
       ]
     },
@@ -52,7 +40,7 @@ const navigation = (): VerticalNavItemsType => {
     },
     {
       title: 'Visitors',
-      path: '/visitors',
+      path: '/apps/visitor',
       icon: 'pepicons-pencil:people'
     },
     {
@@ -67,7 +55,7 @@ const navigation = (): VerticalNavItemsType => {
       path: '/apps/email'
     },
     {
-      title: 'Residents',
+      title: 'Users',
       icon: 'fluent:people-queue-24-regular',
       children: [
         {
@@ -81,24 +69,14 @@ const navigation = (): VerticalNavItemsType => {
               title: 'Overview',
               path: '/apps/user/view/overview'
             },
+
             {
-              title: 'Security',
-              path: '/apps/user/view/security'
-            },
-            {
-              title: 'Billing & Plans',
+              title: 'Billing',
               path: '/apps/user/view/billing-plan'
             }
           ]
         }
       ]
-    },
-    {
-      path: '/acl',
-      action: 'read',
-      subject: 'acl-page',
-      title: 'Access Control',
-      icon: 'mdi:shield-outline'
     }
   ]
 }

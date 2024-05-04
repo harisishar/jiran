@@ -142,7 +142,7 @@ const SidebarLeft = (props: MailSidebarType) => {
                 <Icon icon='mdi:email-outline' fontSize={20} />
               </ListItemIcon>
               <ListItemText
-                primary='Inbox'
+                primary='All Annoucement'
                 primaryTypographyProps={{
                   noWrap: true,
                   sx: { ...(activeInboxCondition && { color: 'primary.main' }) }
@@ -169,65 +169,7 @@ const SidebarLeft = (props: MailSidebarType) => {
                 }}
               />
             </ListItemStyled>
-            <ListItemStyled
-              component={Link}
-              href='/apps/email/draft'
-              onClick={handleListItemClick}
-              sx={{
-                borderLeftColor: handleActiveItem('folder', 'draft') ? 'primary.main' : 'transparent'
-              }}
-            >
-              <ListItemIcon sx={{ color: handleActiveItem('folder', 'draft') ? 'primary.main' : 'text.secondary' }}>
-                <Icon icon='mdi:pencil-outline' fontSize={20} />
-              </ListItemIcon>
-              <ListItemText
-                primary='Draft'
-                primaryTypographyProps={{
-                  noWrap: true,
-                  sx: { ...(handleActiveItem('folder', 'draft') && { color: 'primary.main' }) }
-                }}
-              />
-              {RenderBadge('draft', 'warning')}
-            </ListItemStyled>
-            <ListItemStyled
-              component={Link}
-              href='/apps/email/starred'
-              onClick={handleListItemClick}
-              sx={{
-                borderLeftColor: handleActiveItem('folder', 'starred') ? 'primary.main' : 'transparent'
-              }}
-            >
-              <ListItemIcon sx={{ color: handleActiveItem('folder', 'starred') ? 'primary.main' : 'text.secondary' }}>
-                <Icon icon='mdi:star-outline' fontSize={20} />
-              </ListItemIcon>
-              <ListItemText
-                primary='Starred'
-                primaryTypographyProps={{
-                  noWrap: true,
-                  sx: { ...(handleActiveItem('folder', 'starred') && { color: 'primary.main' }) }
-                }}
-              />
-            </ListItemStyled>
-            <ListItemStyled
-              component={Link}
-              href='/apps/email/spam'
-              onClick={handleListItemClick}
-              sx={{
-                borderLeftColor: handleActiveItem('folder', 'spam') ? 'primary.main' : 'transparent'
-              }}
-            >
-              <ListItemIcon sx={{ color: handleActiveItem('folder', 'spam') ? 'primary.main' : 'text.secondary' }}>
-                <Icon icon='mdi:alert-octagon-outline' fontSize={20} />
-              </ListItemIcon>
-              <ListItemText
-                primary='Spam'
-                primaryTypographyProps={{
-                  noWrap: true,
-                  sx: { ...(handleActiveItem('folder', 'spam') && { color: 'primary.main' }) }
-                }}
-              />
-              {RenderBadge('spam', 'error')}
-            </ListItemStyled>
+
             <ListItemStyled
               component={Link}
               href='/apps/email/trash'
@@ -264,26 +206,6 @@ const SidebarLeft = (props: MailSidebarType) => {
             Labels
           </Typography>
           <List component='div' sx={{ pt: 1 }}>
-            <ListItemStyled
-              component={Link}
-              onClick={handleListItemClick}
-              href='/apps/email/label/personal'
-              sx={{
-                mb: 1,
-                borderLeftColor: handleActiveItem('label', 'personal') ? 'primary.main' : 'transparent'
-              }}
-            >
-              <ListItemIcon sx={{ '& svg': { mr: 1, color: 'success.main' } }}>
-                <Icon icon='mdi:circle' fontSize='0.75rem' />
-              </ListItemIcon>
-              <ListItemText
-                primary='Personal'
-                primaryTypographyProps={{
-                  noWrap: true,
-                  sx: { ...(handleActiveItem('label', 'personal') && { color: 'primary.main' }) }
-                }}
-              />
-            </ListItemStyled>
             <ListItemStyled
               component={Link}
               onClick={handleListItemClick}

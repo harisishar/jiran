@@ -213,25 +213,7 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
               )}
             />
             {errors.email && <FormHelperText sx={{ color: 'error.main' }}>{errors.email.message}</FormHelperText>}
-          </FormControl>
-          <FormControl fullWidth sx={{ mb: 6 }}>
-            <Controller
-              name='company'
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
-                <TextField
-                  value={value}
-                  label='Company'
-                  onChange={onChange}
-                  placeholder='Company PVT LTD'
-                  error={Boolean(errors.company)}
-                />
-              )}
-            />
-            {errors.company && <FormHelperText sx={{ color: 'error.main' }}>{errors.company.message}</FormHelperText>}
-          </FormControl>
-          <FormControl fullWidth sx={{ mb: 6 }}>
+
             <Controller
               name='country'
               control={control}
@@ -284,23 +266,7 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
               <MenuItem value='subscriber'>Subscriber</MenuItem>
             </Select>
           </FormControl>
-          <FormControl fullWidth sx={{ mb: 6 }}>
-            <InputLabel id='plan-select'>Select Plan</InputLabel>
-            <Select
-              fullWidth
-              value={plan}
-              id='select-plan'
-              label='Select Plan'
-              labelId='plan-select'
-              onChange={e => setPlan(e.target.value)}
-              inputProps={{ placeholder: 'Select Plan' }}
-            >
-              <MenuItem value='basic'>Basic</MenuItem>
-              <MenuItem value='company'>Company</MenuItem>
-              <MenuItem value='enterprise'>Enterprise</MenuItem>
-              <MenuItem value='team'>Team</MenuItem>
-            </Select>
-          </FormControl>
+
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button size='large' type='submit' variant='contained' sx={{ mr: 3 }}>
               Submit

@@ -48,10 +48,11 @@ const Home = () => {
       </Grid>
       <Grid item xs={12} md={6}>
         <Card>
+          <Icon icon='' />
           <CardHeader title='Bills 🚀'></CardHeader>
           <CardContent>
             <Typography sx={{ mb: 2 }}>Check all user billing.</Typography>
-            <Button variant='contained' sx={{ mt: 3 }} href='/billing'>
+            <Button variant='contained' sx={{ mt: 3 }} href='/apps/invoice/list'>
               Click Here
             </Button>
           </CardContent>
@@ -84,7 +85,7 @@ const Home = () => {
           <CardHeader title='Annoucements 📌'></CardHeader>
           <CardContent>
             <Typography sx={{ mb: 2 }}>Crate annoucements for residents</Typography>
-            <Button variant='contained' sx={{ mt: 3 }} href='/annoucements'>
+            <Button variant='contained' sx={{ mt: 3 }} href='/apps/email'>
               Click Here
             </Button>
           </CardContent>
@@ -92,10 +93,10 @@ const Home = () => {
       </Grid>
       <Grid item xs={12} md={6}>
         <Card>
-          <CardHeader title='Residents 🏠'></CardHeader>
+          <CardHeader title='Users 🏠'></CardHeader>
           <CardContent>
             <Typography sx={{ mb: 2 }}>View alll residents details and transaction</Typography>
-            <Button variant='contained' sx={{ mt: 3 }} href='/residents'>
+            <Button variant='contained' sx={{ mt: 3 }} href='/apps/user/list'>
               Click Here
             </Button>
           </CardContent>

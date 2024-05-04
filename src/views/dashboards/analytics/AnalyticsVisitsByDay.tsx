@@ -80,7 +80,7 @@ const AnalyticsVisitsByDay = () => {
     <Card>
       <CardHeader
         title='Visits by Day'
-        subheader='Total 248.5k Visits'
+        subheader='Total 65 Visits'
         subheaderTypographyProps={{ sx: { lineHeight: 1.429 } }}
         titleTypographyProps={{ sx: { letterSpacing: '0.15px' } }}
         action={
@@ -95,7 +95,7 @@ const AnalyticsVisitsByDay = () => {
         <Box sx={{ mt: 5, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography sx={{ mb: 0.75, fontWeight: 600 }}>Most Visited Day</Typography>
-            <Typography variant='body2'>Total 62.4k Visits on Thursday</Typography>
+            <Typography variant='body2'>Total 80 Visits on Thursday</Typography>
           </Box>
           <CustomAvatar skin='light' color='warning' variant='rounded'>
             <Icon icon='mdi:chevron-right' />
