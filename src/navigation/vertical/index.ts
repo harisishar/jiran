@@ -40,7 +40,7 @@ const navigation = (): VerticalNavItemsType => {
     },
     {
       title: 'Visitors',
-      path: '/visitors',
+      path: '/apps/visitors/list',
       icon: 'pepicons-pencil:people'
     },
     {

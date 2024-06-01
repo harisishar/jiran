@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography'
 import { styled, useTheme } from '@mui/material/styles'
 
 // ** Configs
-import themeConfig from 'src/configs/themeConfig'
+//import themeConfig from 'src/configs/themeConfig'
 
 // ** Hook
 import { useSettings } from 'src/@core/hooks/useSettings'

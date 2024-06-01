@@ -21,6 +21,7 @@ import FormControl from '@mui/material/FormControl'
 import CardContent from '@mui/material/CardContent'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -206,19 +207,6 @@ const columns: GridColDef[] = [
       )
     }
   },
-  {
-    flex: 0.2,
-    minWidth: 250,
-    field: 'contact',
-    headerName: 'contact',
-    renderCell: ({ row }: CellType) => {
-      return (
-        <Typography noWrap variant='body2'>
-          {row.contact}
-        </Typography>
-      )
-    }
-  },
 
   {
     flex: 0.1,
@@ -298,6 +286,18 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
             <Grid container spacing={6}>
               <Grid item sm={4} xs={12}>
                 <FormControl fullWidth>
+                  <Box>
+                    <TextField
+                      size='medium'
+                      value={value}
+                      placeholder='Search User'
+                      onChange={e => handleFilter(e.target.value)}
+                    />
+                  </Box>
+                </FormControl>
+              </Grid>
+              <Grid item sm={4} xs={12}>
+                <FormControl fullWidth>
                   <InputLabel id='status-select'>Select Status</InputLabel>
                   <Select
                     fullWidth
@@ -310,7 +310,7 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
                   >
                     <MenuItem value='pending'>Pending</MenuItem>
                     <MenuItem value='active'>Active</MenuItem>
-                    <MenuItem value='inactive'>Solved</MenuItem>
+                    <MenuItem value='inactive'>Inactive</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
