@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography'
 import Icon from 'src/@core/components/icon'
 
 // ** Config Import
-import themeConfig from 'src/configs/themeConfig'
+//import themeConfig from 'src/configs/themeConfig'
 
 // ** Custom Avatar Component
 import CustomAvatar from 'src/@core/components/mui/avatar'

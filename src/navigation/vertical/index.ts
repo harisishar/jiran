@@ -19,24 +19,7 @@ const navigation = (): VerticalNavItemsType => {
     {
       title: 'Billing',
       icon: 'mdi:file-document-outline',
-      children: [
-        {
-          title: 'List',
-          path: '/apps/invoice/list'
-        },
-        {
-          title: 'Preview',
-          path: '/apps/invoice/preview'
-        },
-        {
-          title: 'Edit',
-          path: '/apps/invoice/edit'
-        },
-        {
-          title: 'Add',
-          path: '/apps/invoice/add'
-        }
-      ]
+      path: '/apps/invoice/list'
     },
     {
       title: 'Visitors',
@@ -45,38 +28,19 @@ const navigation = (): VerticalNavItemsType => {
     },
     {
       title: 'Complaints',
-      path: '/complaints',
+      path: '/apps/complaints/',
       icon: 'mingcute:report-fill'
     },
 
     {
       title: 'Annoucements',
       icon: 'mdi:bullhorn',
-      path: '/apps/email'
+      path: '/apps/annoucements/'
     },
     {
       title: 'Users',
       icon: 'fluent:people-queue-24-regular',
-      children: [
-        {
-          title: 'List',
-          path: '/apps/user/list'
-        },
-        {
-          title: 'View',
-          children: [
-            {
-              title: 'Overview',
-              path: '/apps/user/view/overview'
-            },
-
-            {
-              title: 'Billing',
-              path: '/apps/user/view/billing-plan'
-            }
-          ]
-        }
-      ]
+      path: '/apps/user-api/'
     }
   ]
 }

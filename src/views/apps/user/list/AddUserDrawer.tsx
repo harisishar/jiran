@@ -1,63 +1,81 @@
-// ** React Imports
-import { useState } from 'react'
-
-// ** MUI Imports
+import { useState, useEffect } from 'react'
 import Drawer from '@mui/material/Drawer'
-import Select from '@mui/material/Select'
 import Button from '@mui/material/Button'
-import MenuItem from '@mui/material/MenuItem'
-import { styled } from '@mui/material/styles'
 import TextField from '@mui/material/TextField'
-import IconButton from '@mui/material/IconButton'
-import InputLabel from '@mui/material/InputLabel'
-import Typography from '@mui/material/Typography'
-import Box, { BoxProps } from '@mui/material/Box'
+import Box from '@mui/material/Box'
 import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+import { styled } from '@mui/material/styles'
 import FormHelperText from '@mui/material/FormHelperText'
-
-// ** Third Party Imports
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
-
-// ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-// ** Store Imports
-import { useDispatch, useSelector } from 'react-redux'
+interface RoleType {
+  roleId: string
+  roleName: string
+}
 
-// ** Actions Imports
-import { addUser } from 'src/store/apps/user'
+interface FloorType {
+  floorId: string
+  floorName: string
+}
 
-// ** Types Imports
-import { RootState, AppDispatch } from 'src/store'
-import { UsersType } from 'src/types/apps/userTypes'
+interface BlockType {
+  blockId: string
+  blockName: string
+}
 
-interface SidebarAddUserType {
+interface AddUserDrawerProps {
   open: boolean
   toggle: () => void
 }
 
 interface UserData {
-  email: string
-  company: string
-  country: string
-  contact: number
-  fullName: string
-  username: string
+  providedUserLogin: string
+  providedPassword: string
+  providedName: string
+  providedNric: string
+  providedUnitNumberId: string
+  providedMobileNo: string
+  providedUnitNo: string
+  providedRoleId: string
+  providedFloorID: string
+  providedBlockID: string
 }
 
-const showErrors = (field: string, valueLen: number, min: number) => {
-  if (valueLen === 0) {
-    return `${field} field is required`
-  } else if (valueLen > 0 && valueLen < min) {
-    return `${field} must be at least ${min} characters`
-  } else {
-    return ''
-  }
+const schema = yup.object().shape({
+  providedUserLogin: yup.string().required('User Login is required'),
+  providedPassword: yup.string().required('Password is required'),
+  providedName: yup.string().required('Full Name is required'),
+  providedNric: yup.string().required('NRIC is required'),
+  providedUnitNumberId: yup.string().required('Unit Number ID is required'),
+  providedMobileNo: yup.string().required('Mobile Number is required'),
+  providedUnitNo: yup.string().required('Unit Number is required'),
+  providedRoleId: yup.string().required('Role is required'),
+  providedFloorID: yup.string().required('Floor is required'),
+  providedBlockID: yup.string().required('Block is required')
+})
+
+const defaultValues = {
+  providedUserLogin: '',
+  providedPassword: '',
+  providedName: '',
+  providedNric: '',
+  providedUnitNumberId: '',
+  providedMobileNo: '',
+  providedUnitNo: '',
+  providedRoleId: '',
+  providedFloorID: '',
+  providedBlockID: ''
 }
 
-const Header = styled(Box)<BoxProps>(({ theme }) => ({
+const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(3, 4),
@@ -65,50 +83,14 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
   backgroundColor: theme.palette.background.default
 }))
 
-const schema = yup.object().shape({
-  company: yup.string().required(),
-  country: yup.string().required(),
-  email: yup.string().email().required(),
-  contact: yup
-    .number()
-    .typeError('Contact Number field is required')
-    .min(10, obj => showErrors('Contact Number', obj.value.length, obj.min))
-    .required(),
-  fullName: yup
-    .string()
-    .min(3, obj => showErrors('First Name', obj.value.length, obj.min))
-    .required(),
-  username: yup
-    .string()
-    .min(3, obj => showErrors('Username', obj.value.length, obj.min))
-    .required()
-})
+const AddUserDrawer: React.FC<AddUserDrawerProps> = ({ open, toggle }) => {
+  const [roles, setRoles] = useState<RoleType[]>([])
+  const [floors, setFloors] = useState<FloorType[]>([])
+  const [blocks, setBlocks] = useState<BlockType[]>([])
 
-const defaultValues = {
-  email: '',
-  company: '',
-  country: '',
-  fullName: '',
-  username: '',
-  contact: Number('')
-}
-
-const SidebarAddUser = (props: SidebarAddUserType) => {
-  // ** Props
-  const { open, toggle } = props
-
-  // ** State
-  const [plan, setPlan] = useState<string>('basic')
-  const [role, setRole] = useState<string>('subscriber')
-
-  // ** Hooks
-  const dispatch = useDispatch<AppDispatch>()
-  const store = useSelector((state: RootState) => state.user)
   const {
     reset,
     control,
-    setValue,
-    setError,
     handleSubmit,
     formState: { errors }
   } = useForm({
@@ -116,44 +98,55 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
     mode: 'onChange',
     resolver: yupResolver(schema)
   })
-  const onSubmit = (data: UserData) => {
-    if (store.allData.some((u: UsersType) => u.email === data.email || u.username === data.username)) {
-      store.allData.forEach((u: UsersType) => {
-        if (u.email === data.email) {
-          setError('email', {
-            message: 'Email already exists!'
-          })
+
+  useEffect(() => {
+    fetch('https://api.jiran.kimsformatics.com/User/GetAllUser?systemID=1')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`)
         }
-        if (u.username === data.username) {
-          setError('username', {
-            message: 'Username already exists!'
-          })
-        }
+
+        return response.json()
       })
-    } else {
-      dispatch(addUser({ ...data, role, currentPlan: plan }))
-      toggle()
-      reset()
+      .then(data => {
+        setRoles(data)
+        setFloors(data) // Assuming the data contains floors as well
+        setBlocks(data) // Assuming the data contains blocks as well
+      })
+      .catch(error => console.error('Failed to fetch data:', error))
+  }, [])
+
+  const onSubmit = async (data: UserData) => {
+    const url = `https://api.jiran.kimsformatics.com/User/Register?${new URLSearchParams(data as any).toString()}`
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+
+      if (response.ok) {
+        console.log('User registered successfully')
+        toggle()
+        reset()
+      } else {
+        console.error('Failed to register user')
+      }
+    } catch (error) {
+      console.error('Error registering user:', error)
     }
   }
 
   const handleClose = () => {
-    setPlan('basic')
-    setRole('subscriber')
-    setValue('contact', Number(''))
     toggle()
     reset()
   }
 
   return (
-    <Drawer
-      open={open}
-      anchor='right'
-      variant='temporary'
-      onClose={handleClose}
-      ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
-    >
+    <Drawer anchor='right' open={open} onClose={handleClose} sx={{ '& .MuiDrawer-paper': { width: 300 } }}>
       <Header>
         <Typography variant='h6'>Add User</Typography>
         <IconButton size='small' onClick={handleClose} sx={{ color: 'text.primary' }}>
@@ -164,142 +157,170 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
-              name='fullName'
+              name='providedUserLogin'
               control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
+              render={({ field }) => (
                 <TextField
-                  value={value}
-                  label='Full Name'
-                  onChange={onChange}
-                  placeholder='John Doe'
-                  error={Boolean(errors.fullName)}
+                  {...field}
+                  label='User Login'
+                  placeholder='User Login'
+                  error={Boolean(errors.providedUserLogin)}
                 />
               )}
             />
-            {errors.fullName && <FormHelperText sx={{ color: 'error.main' }}>{errors.fullName.message}</FormHelperText>}
+            {errors.providedUserLogin && (
+              <FormHelperText sx={{ color: 'error.main' }}>{errors.providedUserLogin.message}</FormHelperText>
+            )}
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
-              name='username'
+              name='providedPassword'
               control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
+              render={({ field }) => (
                 <TextField
-                  value={value}
-                  label='Username'
-                  onChange={onChange}
-                  placeholder='johndoe'
-                  error={Boolean(errors.username)}
+                  {...field}
+                  type='password'
+                  label='Password'
+                  placeholder='Password'
+                  error={Boolean(errors.providedPassword)}
                 />
               )}
             />
-            {errors.username && <FormHelperText sx={{ color: 'error.main' }}>{errors.username.message}</FormHelperText>}
+            {errors.providedPassword && (
+              <FormHelperText sx={{ color: 'error.main' }}>{errors.providedPassword.message}</FormHelperText>
+            )}
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
-              name='email'
+              name='providedName'
               control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
-                <TextField
-                  type='email'
-                  value={value}
-                  label='Email'
-                  onChange={onChange}
-                  placeholder='johndoe@email.com'
-                  error={Boolean(errors.email)}
-                />
+              render={({ field }) => (
+                <TextField {...field} label='Full Name' placeholder='Full Name' error={Boolean(errors.providedName)} />
               )}
             />
-            {errors.email && <FormHelperText sx={{ color: 'error.main' }}>{errors.email.message}</FormHelperText>}
+            {errors.providedName && (
+              <FormHelperText sx={{ color: 'error.main' }}>{errors.providedName.message}</FormHelperText>
+            )}
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
-              name='company'
+              name='providedNric'
               control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
-                <TextField
-                  value={value}
-                  label='Company'
-                  onChange={onChange}
-                  placeholder='Company PVT LTD'
-                  error={Boolean(errors.company)}
-                />
+              render={({ field }) => (
+                <TextField {...field} label='NRIC' placeholder='NRIC' error={Boolean(errors.providedNric)} />
               )}
             />
-            {errors.company && <FormHelperText sx={{ color: 'error.main' }}>{errors.company.message}</FormHelperText>}
+            {errors.providedNric && (
+              <FormHelperText sx={{ color: 'error.main' }}>{errors.providedNric.message}</FormHelperText>
+            )}
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
-              name='country'
+              name='providedUnitNumberId'
               control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
+              render={({ field }) => (
                 <TextField
-                  value={value}
-                  label='Country'
-                  onChange={onChange}
-                  placeholder='Australia'
-                  error={Boolean(errors.country)}
+                  {...field}
+                  label='Unit Number ID'
+                  placeholder='Unit Number ID'
+                  error={Boolean(errors.providedUnitNumberId)}
                 />
               )}
             />
-            {errors.country && <FormHelperText sx={{ color: 'error.main' }}>{errors.country.message}</FormHelperText>}
+            {errors.providedUnitNumberId && (
+              <FormHelperText sx={{ color: 'error.main' }}>{errors.providedUnitNumberId.message}</FormHelperText>
+            )}
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
-              name='contact'
+              name='providedMobileNo'
               control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
+              render={({ field }) => (
                 <TextField
-                  type='number'
-                  value={value}
-                  label='Contact'
-                  onChange={onChange}
-                  placeholder='(397) 294-5153'
-                  error={Boolean(errors.contact)}
+                  {...field}
+                  label='Mobile Number'
+                  placeholder='Mobile Number'
+                  error={Boolean(errors.providedMobileNo)}
                 />
               )}
             />
-            {errors.contact && <FormHelperText sx={{ color: 'error.main' }}>{errors.contact.message}</FormHelperText>}
+            {errors.providedMobileNo && (
+              <FormHelperText sx={{ color: 'error.main' }}>{errors.providedMobileNo.message}</FormHelperText>
+            )}
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
-            <InputLabel id='role-select'>Select Role</InputLabel>
-            <Select
-              fullWidth
-              value={role}
-              id='select-role'
-              label='Select Role'
-              labelId='role-select'
-              onChange={e => setRole(e.target.value)}
-              inputProps={{ placeholder: 'Select Role' }}
-            >
-              <MenuItem value='admin'>Admin</MenuItem>
-              <MenuItem value='author'>Author</MenuItem>
-              <MenuItem value='editor'>Editor</MenuItem>
-              <MenuItem value='maintainer'>Maintainer</MenuItem>
-              <MenuItem value='subscriber'>Subscriber</MenuItem>
-            </Select>
+            <Controller
+              name='providedUnitNo'
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label='Unit Number'
+                  placeholder='Unit Number'
+                  error={Boolean(errors.providedUnitNo)}
+                />
+              )}
+            />
+            {errors.providedUnitNo && (
+              <FormHelperText sx={{ color: 'error.main' }}>{errors.providedUnitNo.message}</FormHelperText>
+            )}
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
-            <InputLabel id='plan-select'>Select Plan</InputLabel>
-            <Select
-              fullWidth
-              value={plan}
-              id='select-plan'
-              label='Select Plan'
-              labelId='plan-select'
-              onChange={e => setPlan(e.target.value)}
-              inputProps={{ placeholder: 'Select Plan' }}
-            >
-              <MenuItem value='basic'>Basic</MenuItem>
-              <MenuItem value='company'>Company</MenuItem>
-              <MenuItem value='enterprise'>Enterprise</MenuItem>
-              <MenuItem value='team'>Team</MenuItem>
-            </Select>
+            <InputLabel>Role</InputLabel>
+            <Controller
+              name='providedRoleId'
+              control={control}
+              render={({ field }) => (
+                <Select {...field} label='Role' error={Boolean(errors.providedRoleId)}>
+                  {roles.map(role => (
+                    <MenuItem key={role.roleId} value={role.roleId}>
+                      {role.roleName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+            {errors.providedRoleId && (
+              <FormHelperText sx={{ color: 'error.main' }}>{errors.providedRoleId.message}</FormHelperText>
+            )}
+          </FormControl>
+          <FormControl fullWidth sx={{ mb: 6 }}>
+            <InputLabel>Floor</InputLabel>
+            <Controller
+              name='providedFloorID'
+              control={control}
+              render={({ field }) => (
+                <Select {...field} label='Floor' error={Boolean(errors.providedFloorID)}>
+                  {floors.map(floor => (
+                    <MenuItem key={floor.floorId} value={floor.floorId}>
+                      {floor.floorName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+            {errors.providedFloorID && (
+              <FormHelperText sx={{ color: 'error.main' }}>{errors.providedFloorID.message}</FormHelperText>
+            )}
+          </FormControl>
+          <FormControl fullWidth sx={{ mb: 6 }}>
+            <InputLabel>Block</InputLabel>
+            <Controller
+              name='providedBlockID'
+              control={control}
+              render={({ field }) => (
+                <Select {...field} label='Block' error={Boolean(errors.providedBlockID)}>
+                  {blocks.map(block => (
+                    <MenuItem key={block.blockId} value={block.blockId}>
+                      {block.blockName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+            {errors.providedBlockID && (
+              <FormHelperText sx={{ color: 'error.main' }}>{errors.providedBlockID.message}</FormHelperText>
+            )}
           </FormControl>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button size='large' type='submit' variant='contained' sx={{ mr: 3 }}>
@@ -315,4 +336,4 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
   )
 }
 
-export default SidebarAddUser
+export default AddUserDrawer

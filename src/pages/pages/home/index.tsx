@@ -5,7 +5,8 @@ import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
-import Link from 'next/link'
+
+//import Link from 'next/link'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -14,12 +15,11 @@ import Icon from 'src/@core/components/icon'
 import CardStatisticsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
 
 // ** Styled Component Import
-import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
+//import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 
-import AnalyticsTotalRevenue from 'src/views/dashboards/analytics/AnalyticsTotalRevenue'
-import AnalyticsCongratulations from 'src/views/dashboards/analytics/AnalyticsCongratulations'
+//import AnalyticsTotalRevenue from 'src/views/dashboards/analytics/AnalyticsTotalRevenue'
+//import AnalyticsCongratulations from 'src/views/dashboards/analytics/AnalyticsCongratulations'
 import AnalyticsVisitsByDay from 'src/views/dashboards/analytics/AnalyticsVisitsByDay'
-import AnalyticsTotalComplaints from 'src/views/dashboards/analytics/AnalyticsTotalComplaints'
 
 const Home = () => {
   return (

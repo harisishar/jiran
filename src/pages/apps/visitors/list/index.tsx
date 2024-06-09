@@ -1,19 +1,11 @@
-// ** React Imports
 import { useState, useEffect, MouseEvent, useCallback } from 'react'
-
-// ** Next Imports
 import Link from 'next/link'
-import { GetStaticProps, InferGetStaticPropsType } from 'next/types'
-
-// ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
-import Menu from '@mui/material/Menu'
 import Grid from '@mui/material/Grid'
 import Divider from '@mui/material/Divider'
 import { styled } from '@mui/material/styles'
 import MenuItem from '@mui/material/MenuItem'
-import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import InputLabel from '@mui/material/InputLabel'
@@ -22,63 +14,32 @@ import CardContent from '@mui/material/CardContent'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
-
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
-
-// ** Store Imports
-import { useDispatch, useSelector } from 'react-redux'
-
-// ** Custom Components Imports
 import CustomChip from 'src/@core/components/mui/chip'
-import CustomAvatar from 'src/@core/components/mui/avatar'
-import CardStatisticsHorizontal from 'src/@core/components/card-statistics/card-stats-horizontal'
-
-// ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
-
-// ** Actions Imports
-import { fetchData, deleteUser } from 'src/store/apps/user'
-
-// ** Third Party Components
-import axios from 'axios'
-
-// ** Types Imports
+import { deleteUser } from 'src/store/apps/user'
 import { RootState, AppDispatch } from 'src/store'
-import { CardStatsType } from 'src/@fake-db/types'
 import { ThemeColor } from 'src/@core/layouts/types'
-import { UsersType } from 'src/types/apps/userTypes'
-import { CardStatsHorizontalProps } from 'src/@core/components/card-statistics/types'
-
-// ** Custom Table Components Imports
-import TableHeader from 'src/views/apps/user/list/TableHeader'
 import AddUserDrawer from 'src/views/apps/user/list/AddUserDrawer'
 
-interface UserRoleType {
-  [key: string]: { icon: string; color: string }
-}
-
-interface UserStatusType {
-  [key: string]: ThemeColor
-}
-
-// ** Vars
-const userRoleObj: UserRoleType = {
-  admin: { icon: 'mdi:laptop', color: 'error.main' },
-  author: { icon: 'mdi:cog-outline', color: 'warning.main' },
-  editor: { icon: 'mdi:pencil-outline', color: 'info.main' },
-  maintainer: { icon: 'mdi:chart-donut', color: 'success.main' },
-  subscriber: { icon: 'mdi:account-outline', color: 'primary.main' }
+interface VisitorType {
+  visitorName: string
+  visitorMobileNo: string
+  visitorQuantity: number
+  visitorPurposeOfVisit: string
+  visitorVehicle: string
+  visitorVehiclePlate: string
+  approvalStatus: string
+  createdDate: string
 }
 
 interface CellType {
-  row: UsersType
+  row: VisitorType
 }
 
-const userStatusObj: UserStatusType = {
-  active: 'success',
+const visitorStatusObj: { [key: string]: ThemeColor } = {
+  approved: 'success',
   pending: 'warning',
-  inactive: 'secondary'
+  rejected: 'error'
 }
 
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -92,134 +53,97 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   }
 }))
 
-// ** renders client column
-const renderClient = (row: UsersType) => {
-  if (row.avatar.length) {
-    return <CustomAvatar src={row.avatar} sx={{ mr: 3, width: 34, height: 34 }} />
-  } else {
-    return (
-      <CustomAvatar
-        skin='light'
-        color={row.avatarColor || 'primary'}
-        sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}
-      >
-        {getInitials(row.fullName ? row.fullName : 'John Doe')}
-      </CustomAvatar>
-    )
-  }
-}
-
-const RowOptions = ({ id }: { id: number | string }) => {
-  // ** Hooks
-  const dispatch = useDispatch<AppDispatch>()
-
-  // ** State
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-
-  const rowOptionsOpen = Boolean(anchorEl)
-
-  const handleRowOptionsClick = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
-  const handleRowOptionsClose = () => {
-    setAnchorEl(null)
-  }
-
-  const handleDelete = () => {
-    dispatch(deleteUser(id))
-    handleRowOptionsClose()
-  }
-
-  return (
-    <>
-      <IconButton size='small' onClick={handleRowOptionsClick}>
-        <Icon icon='mdi:dots-vertical' />
-      </IconButton>
-      <Menu
-        keepMounted
-        anchorEl={anchorEl}
-        open={rowOptionsOpen}
-        onClose={handleRowOptionsClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right'
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right'
-        }}
-        PaperProps={{ style: { minWidth: '8rem' } }}
-      >
-        <MenuItem
-          component={Link}
-          sx={{ '& svg': { mr: 2 } }}
-          onClick={handleRowOptionsClose}
-          href='/apps/user/view/overview/'
-        >
-          <Icon icon='mdi:eye-outline' fontSize={20} />
-          View
-        </MenuItem>
-        <MenuItem onClick={handleRowOptionsClose} sx={{ '& svg': { mr: 2 } }}>
-          <Icon icon='mdi:pencil-outline' fontSize={20} />
-          Edit
-        </MenuItem>
-        <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
-          <Icon icon='mdi:delete-outline' fontSize={20} />
-          Delete
-        </MenuItem>
-      </Menu>
-    </>
-  )
-}
-
 const columns: GridColDef[] = [
   {
     flex: 0.2,
     minWidth: 230,
-    field: 'fullName',
-    headerName: 'User',
+    field: 'visitorName',
+    headerName: 'Visitor Name',
     renderCell: ({ row }: CellType) => {
-      const { fullName, username } = row
-
       return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {renderClient(row)}
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-            <LinkStyled href='/apps/user/view/overview/'>{fullName}</LinkStyled>
-            <Typography noWrap variant='caption'>
-              {`@${username}`}
-            </Typography>
-          </Box>
-        </Box>
+        <Typography noWrap variant='body2'>
+          {row.visitorName}
+        </Typography>
+      )
+    }
+  },
+  {
+    flex: 0.2,
+    minWidth: 150,
+    field: 'visitorMobileNo',
+    headerName: 'Mobile No',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Typography noWrap variant='body2'>
+          {row.visitorMobileNo}
+        </Typography>
+      )
+    }
+  },
+  {
+    flex: 0.1,
+    minWidth: 120,
+    field: 'visitorQuantity',
+    headerName: 'Quantity',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Typography noWrap variant='body2'>
+          {row.visitorQuantity}
+        </Typography>
       )
     }
   },
   {
     flex: 0.2,
     minWidth: 250,
-    field: 'email',
-    headerName: 'Email',
+    field: 'visitorPurposeOfVisit',
+    headerName: 'Purpose of Visit',
     renderCell: ({ row }: CellType) => {
       return (
         <Typography noWrap variant='body2'>
-          {row.email}
+          {row.visitorPurposeOfVisit}
         </Typography>
       )
     }
   },
-
+  {
+    flex: 0.2,
+    minWidth: 150,
+    field: 'visitorVehicle',
+    headerName: 'Vehicle',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Typography noWrap variant='body2'>
+          {row.visitorVehicle}
+        </Typography>
+      )
+    }
+  },
+  {
+    flex: 0.2,
+    minWidth: 150,
+    field: 'visitorVehiclePlate',
+    headerName: 'Vehicle Plate',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Typography noWrap variant='body2'>
+          {row.visitorVehiclePlate}
+        </Typography>
+      )
+    }
+  },
   {
     flex: 0.1,
-    minWidth: 110,
-    field: 'status',
-    headerName: 'Status',
+    minWidth: 120,
+    field: 'approvalStatus',
+    headerName: 'Approval Status',
     renderCell: ({ row }: CellType) => {
       return (
         <CustomChip
           skin='light'
           size='small'
-          label={row.status}
-          color={userStatusObj[row.status]}
+          label={row.approvalStatus}
+          color={visitorStatusObj[row.approvalStatus]}
           sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
         />
       )
@@ -227,48 +151,38 @@ const columns: GridColDef[] = [
   },
   {
     flex: 0.1,
-    minWidth: 90,
-    sortable: false,
-    field: 'actions',
-    headerName: 'Actions',
-    renderCell: ({ row }: CellType) => <RowOptions id={row.id} />
+    minWidth: 260,
+    field: 'createdDate',
+    headerName: 'Date',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Typography noWrap variant='body2'>
+          {row.createdDate}
+        </Typography>
+      )
+    }
   }
 ]
 
-const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  // ** State
-  const [role, setRole] = useState<string>('')
-  const [plan, setPlan] = useState<string>('')
-  const [value, setValue] = useState<string>('')
+const VisitorList = ({ apiData }: { apiData: VisitorType[] }) => {
+  const [filterValue, setFilterValue] = useState<string>('')
   const [status, setStatus] = useState<string>('')
-  const [addUserOpen, setAddUserOpen] = useState<boolean>(false)
+  const [filteredData, setFilteredData] = useState<VisitorType[]>(apiData)
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
-
-  // ** Hooks
-  const dispatch = useDispatch<AppDispatch>()
-  const store = useSelector((state: RootState) => state.user)
+  const [addUserOpen, setAddUserOpen] = useState<boolean>(false)
 
   useEffect(() => {
-    dispatch(
-      fetchData({
-        role,
-        status,
-        q: value,
-        currentPlan: plan
-      })
+    setFilteredData(
+      apiData.filter(
+        visitor =>
+          visitor.visitorName.toLowerCase().includes(filterValue.toLowerCase()) &&
+          (status === '' || visitor.approvalStatus === status)
+      )
     )
-  }, [dispatch, plan, role, status, value])
+  }, [filterValue, status, apiData])
 
   const handleFilter = useCallback((val: string) => {
-    setValue(val)
-  }, [])
-
-  const handleRoleChange = useCallback((e: SelectChangeEvent) => {
-    setRole(e.target.value)
-  }, [])
-
-  const handlePlanChange = useCallback((e: SelectChangeEvent) => {
-    setPlan(e.target.value)
+    setFilterValue(val)
   }, [])
 
   const handleStatusChange = useCallback((e: SelectChangeEvent) => {
@@ -286,18 +200,6 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
             <Grid container spacing={6}>
               <Grid item sm={4} xs={12}>
                 <FormControl fullWidth>
-                  <Box>
-                    <TextField
-                      size='medium'
-                      value={value}
-                      placeholder='Search User'
-                      onChange={e => handleFilter(e.target.value)}
-                    />
-                  </Box>
-                </FormControl>
-              </Grid>
-              <Grid item sm={4} xs={12}>
-                <FormControl fullWidth>
                   <InputLabel id='status-select'>Select Status</InputLabel>
                   <Select
                     fullWidth
@@ -306,26 +208,36 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
                     label='Select Status'
                     labelId='status-select'
                     onChange={handleStatusChange}
-                    inputProps={{ placeholder: 'Select Role' }}
                   >
+                    <MenuItem value=''>Select Status</MenuItem>
+                    <MenuItem value='approved'>Approved</MenuItem>
                     <MenuItem value='pending'>Pending</MenuItem>
-                    <MenuItem value='active'>Active</MenuItem>
-                    <MenuItem value='inactive'>Inactive</MenuItem>
+                    <MenuItem value='rejected'>Rejected</MenuItem>
                   </Select>
                 </FormControl>
+              </Grid>
+              <Grid item sm={4} xs={12}>
+                <TextField
+                  fullWidth
+                  value={filterValue}
+                  onChange={e => handleFilter(e.target.value)}
+                  label='Visitor Name'
+                  placeholder='Search by visitor name'
+                />
               </Grid>
             </Grid>
           </CardContent>
           <Divider />
           <DataGrid
             autoHeight
-            rows={store.data}
+            rows={filteredData}
             columns={columns}
             checkboxSelection
             disableRowSelectionOnClick
             pageSizeOptions={[10, 25, 50]}
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
+            getRowId={row => row.visitorName} // Assuming visitorName is unique
             sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
           />
         </Card>
@@ -336,15 +248,28 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const res = await axios.get('/cards/statistics')
-  const apiData: CardStatsType = res.data
+export const getServerSideProps: GetServerSideProps = async () => {
+  try {
+    const res = await fetch('https://api.jiran.kimsformatics.com/User/GetVisitor?unitUserID=1')
+    const text = await res.text()
 
-  return {
-    props: {
-      apiData
+    // Attempt to parse JSON, or throw an error if it's not valid
+    const apiData = JSON.parse(text)
+
+    return {
+      props: {
+        apiData
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching visitor data:', error)
+
+    return {
+      props: {
+        apiData: [] // Return an empty array in case of error
+      }
     }
   }
 }
 
-export default UserList
+export default VisitorList

@@ -1,11 +1,6 @@
-// ** React Imports
 import { useState, useEffect, MouseEvent, useCallback } from 'react'
-
-// ** Next Imports
 import Link from 'next/link'
-import { GetStaticProps, InferGetStaticPropsType } from 'next/types'
-
-// ** MUI Imports
+import { GetServerSideProps } from 'next'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Menu from '@mui/material/Menu'
@@ -21,53 +16,20 @@ import FormControl from '@mui/material/FormControl'
 import CardContent from '@mui/material/CardContent'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
-
-// ** Icon Imports
 import Icon from 'src/@core/components/icon'
-
-// ** Store Imports
 import { useDispatch, useSelector } from 'react-redux'
-
-// ** Custom Components Imports
 import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import CardStatisticsHorizontal from 'src/@core/components/card-statistics/card-stats-horizontal'
-
-// ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
-
-// ** Actions Imports
-import { fetchData, deleteUser } from 'src/store/apps/user'
-
-// ** Third Party Components
-import axios from 'axios'
-
-// ** Types Imports
+import { deleteUser } from 'src/store/apps/user'
 import { RootState, AppDispatch } from 'src/store'
-import { CardStatsType } from 'src/@fake-db/types'
 import { ThemeColor } from 'src/@core/layouts/types'
 import { UsersType } from 'src/types/apps/userTypes'
-import { CardStatsHorizontalProps } from 'src/@core/components/card-statistics/types'
-
-// ** Custom Table Components Imports
 import TableHeader from 'src/views/apps/user/list/TableHeader'
 import AddUserDrawer from 'src/views/apps/user/list/AddUserDrawer'
 
-interface UserRoleType {
-  [key: string]: { icon: string; color: string }
-}
-
 interface UserStatusType {
   [key: string]: ThemeColor
-}
-
-// ** Vars
-const userRoleObj: UserRoleType = {
-  admin: { icon: 'mdi:laptop', color: 'error.main' },
-  author: { icon: 'mdi:cog-outline', color: 'warning.main' },
-  editor: { icon: 'mdi:pencil-outline', color: 'info.main' },
-  maintainer: { icon: 'mdi:chart-donut', color: 'success.main' },
-  subscriber: { icon: 'mdi:account-outline', color: 'primary.main' }
 }
 
 interface CellType {
@@ -91,9 +53,8 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   }
 }))
 
-// ** renders client column
 const renderClient = (row: UsersType) => {
-  if (row.avatar.length) {
+  if (row.avatar && row.avatar.length) {
     return <CustomAvatar src={row.avatar} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
@@ -102,19 +63,15 @@ const renderClient = (row: UsersType) => {
         color={row.avatarColor || 'primary'}
         sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}
       >
-        {getInitials(row.fullName ? row.fullName : 'John Doe')}
+        {getInitials(row.name ? row.name : 'John Doe')}
       </CustomAvatar>
     )
   }
 }
 
 const RowOptions = ({ id }: { id: number | string }) => {
-  // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
-
-  // ** State
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-
   const rowOptionsOpen = Boolean(anchorEl)
 
   const handleRowOptionsClick = (event: MouseEvent<HTMLElement>) => {
@@ -123,7 +80,6 @@ const RowOptions = ({ id }: { id: number | string }) => {
   const handleRowOptionsClose = () => {
     setAnchorEl(null)
   }
-
   const handleDelete = () => {
     dispatch(deleteUser(id))
     handleRowOptionsClose()
@@ -175,18 +131,18 @@ const columns: GridColDef[] = [
   {
     flex: 0.2,
     minWidth: 230,
-    field: 'fullName',
+    field: 'name',
     headerName: 'User',
     renderCell: ({ row }: CellType) => {
-      const { fullName, username } = row
+      const { name, userLogin } = row
 
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {renderClient(row)}
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-            <LinkStyled href='/apps/user/view/overview/'>{fullName}</LinkStyled>
+            <LinkStyled href='/apps/user/view/overview/'>{name}</LinkStyled>
             <Typography noWrap variant='caption'>
-              {`@${username}`}
+              {`@${userLogin}`}
             </Typography>
           </Box>
         </Box>
@@ -209,12 +165,66 @@ const columns: GridColDef[] = [
   {
     flex: 0.2,
     minWidth: 250,
-    field: 'contact',
-    headerName: 'contact',
+    field: 'mobileNo',
+    headerName: 'Mobile',
     renderCell: ({ row }: CellType) => {
       return (
         <Typography noWrap variant='body2'>
-          {row.contact}
+          {row.mobileNo}
+        </Typography>
+      )
+    }
+  },
+  {
+    flex: 0.15,
+    field: 'role{roleName}',
+    minWidth: 150,
+    headerName: 'Role',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Typography noWrap variant='body2'>
+          {row.role?.roleName || 'N/A'}
+        </Typography>
+      )
+    }
+  },
+
+  {
+    flex: 0.1,
+    minWidth: 110,
+    field: 'areaName',
+    headerName: 'Area Name',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Typography noWrap variant='body2'>
+          {row.system?.areaName || 'N/A'}
+        </Typography>
+      )
+    }
+  },
+
+  {
+    flex: 0.1,
+    minWidth: 110,
+    field: 'blockName',
+    headerName: 'Block',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Typography noWrap variant='body2'>
+          {row.unitNumber?.block.blockName || 'N/A'}
+        </Typography>
+      )
+    }
+  },
+  {
+    flex: 0.1,
+    minWidth: 110,
+    field: 'floorName',
+    headerName: 'Floor',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Typography noWrap variant='body2'>
+          {row.unitNumber?.floor.floorName || 'N/A'}
         </Typography>
       )
     }
@@ -243,44 +253,19 @@ const columns: GridColDef[] = [
     sortable: false,
     field: 'actions',
     headerName: 'Actions',
-    renderCell: ({ row }: CellType) => <RowOptions id={row.id} />
+    renderCell: ({ row }: CellType) => <RowOptions id={row.userId} />
   }
 ]
 
-const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  // ** State
-  const [role, setRole] = useState<string>('')
-  const [plan, setPlan] = useState<string>('')
+const UserList = ({ apiData }: { apiData: UsersType[] }) => {
+  const [roleName, setRole] = useState<string>('')
   const [value, setValue] = useState<string>('')
   const [status, setStatus] = useState<string>('')
   const [addUserOpen, setAddUserOpen] = useState<boolean>(false)
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
 
-  // ** Hooks
-  const dispatch = useDispatch<AppDispatch>()
-  const store = useSelector((state: RootState) => state.user)
-
-  useEffect(() => {
-    dispatch(
-      fetchData({
-        role,
-        status,
-        q: value,
-        currentPlan: plan
-      })
-    )
-  }, [dispatch, plan, role, status, value])
-
   const handleFilter = useCallback((val: string) => {
     setValue(val)
-  }, [])
-
-  const handleRoleChange = useCallback((e: SelectChangeEvent) => {
-    setRole(e.target.value)
-  }, [])
-
-  const handlePlanChange = useCallback((e: SelectChangeEvent) => {
-    setPlan(e.target.value)
   }, [])
 
   const handleStatusChange = useCallback((e: SelectChangeEvent) => {
@@ -308,24 +293,27 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
                     onChange={handleStatusChange}
                     inputProps={{ placeholder: 'Select Role' }}
                   >
+                    <MenuItem value=''>Select Role</MenuItem>
                     <MenuItem value='pending'>Pending</MenuItem>
                     <MenuItem value='active'>Active</MenuItem>
-                    <MenuItem value='inactive'>Solved</MenuItem>
+                    <MenuItem value='inactive'>Inactive</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
             </Grid>
           </CardContent>
           <Divider />
+          <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
           <DataGrid
             autoHeight
-            rows={store.data}
+            rows={apiData}
             columns={columns}
             checkboxSelection
             disableRowSelectionOnClick
             pageSizeOptions={[10, 25, 50]}
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
+            getRowId={row => row.userId}
             sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
           />
         </Card>
@@ -336,9 +324,9 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const res = await axios.get('/cards/statistics')
-  const apiData: CardStatsType = res.data
+export const getServerSideProps: GetServerSideProps = async () => {
+  const res = await fetch('https://api.jiran.kimsformatics.com/User/GetAllUser?systemID=1')
+  const apiData: UsersType[] = await res.json()
 
   return {
     props: {
